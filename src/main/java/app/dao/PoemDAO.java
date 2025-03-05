@@ -13,6 +13,8 @@ public class PoemDAO implements IDAO<Poem, Integer>
     private static EntityManagerFactory emf;
     private static PoemDAO instance;
 
+    public PoemDAO(){}
+
     public static PoemDAO getInstance(EntityManagerFactory _emf)
     {
         if (emf == null)

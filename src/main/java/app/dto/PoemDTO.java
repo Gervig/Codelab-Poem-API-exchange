@@ -12,11 +12,13 @@ public class PoemDTO
 {
     private String poem;
     private LocalDate created;
+    private AuthorDTO authorDTO;
 
     public PoemDTO(Poem poem)
     {
     this.poem = poem.getPoem();
     this.created = poem.getCreated();
+    this.authorDTO = new AuthorDTO(poem.getAuthor());
     }
 
 }

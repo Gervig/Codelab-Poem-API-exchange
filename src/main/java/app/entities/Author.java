@@ -1,4 +1,5 @@
 package app.entities;
+import app.dto.AuthorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;

@@ -6,32 +6,39 @@ import app.dto.PoemDTO;
 import app.populators.PoemPopulator;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 public class Main
 {
+
     public static void main(String[] args)
     {
+        // Create the EntityManagerFactory
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
 
+        //Uncomment this line if you want to populate the database once
+        PoemPopulator.populate(emf);
+
+        // Ensure that the PoemDAO instance is correctly initialized with the emf
         PoemController poemController = new PoemController(emf);
-        Javalin.create((config) ->
+
+        // Initialize Javalin
+        Javalin.create(config ->
         {
             config.router.contextPath = "/api";
             config.router.apiBuilder(() -> ApiBuilder.path("poem", () ->
             {
-                ApiBuilder.get("/", (ctx) -> ctx.json(poemController.getAll()));
-                ApiBuilder.get("/{id}", (ctx) -> ctx.json(poemController.getById(Integer.parseInt(ctx.pathParam("id")))));
-                ApiBuilder.post("/", (ctx) ->
+                ApiBuilder.get("/", ctx -> ctx.json(poemController.getAll()));
+                ApiBuilder.get("/{id}", ctx -> ctx.json(poemController.getById(Integer.parseInt(ctx.pathParam("id")))));
+                ApiBuilder.post("/", ctx ->
                 {
-                    PoemDTO incomingPoem = (PoemDTO)ctx.bodyAsClass(PoemDTO.class);
+                    PoemDTO incomingPoem = ctx.bodyAsClass(PoemDTO.class);
                     poemController.create(incomingPoem);
                     ctx.json(incomingPoem);
                 });
-                ApiBuilder.put("/{id}",(ctx)->{
-                    PoemDTO incomingPoem = (PoemDTO)ctx.bodyAsClass(PoemDTO.class);
+                ApiBuilder.put("/{id}", ctx ->
+                {
+                    PoemDTO incomingPoem = ctx.bodyAsClass(PoemDTO.class);
                     int id = Integer.parseInt(ctx.pathParam("id"));
                     poemController.setPoem(id, incomingPoem);
                     ctx.json(incomingPoem);
@@ -40,12 +47,7 @@ public class Main
         }).start(7070);
 
 
-        //PoemPopulator.populate(emf); //Kør denne 1 gang for at populate databasen
-
-
-        // Close the database connection:
-        em.close();
-        emf.close();
+        // Close the EntityManagerFactory when done
+//        emf.close();
     }
-
 }

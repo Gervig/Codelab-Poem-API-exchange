@@ -16,12 +16,14 @@ import java.util.List;
 public class PoemController
 {
     EntityManagerFactory emf;
-    private PoemDAO poemDAO = PoemDAO.getInstance(emf);
-    private AuthorDAO authorDAO = AuthorDAO.getInstance(emf);
+    private PoemDAO poemDAO;
+    private AuthorDAO authorDAO;
 
     public PoemController(EntityManagerFactory _emf)
     {
         this.emf = _emf;
+        this.poemDAO = PoemDAO.getInstance(emf);
+        this.authorDAO = AuthorDAO.getInstance(emf);
     }
 
     public PoemDTO getById(int id) throws Exception

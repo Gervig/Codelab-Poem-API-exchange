@@ -10,16 +10,21 @@ import java.util.List;
 
 public class PoemDAO implements IDAO<Poem, Integer>
 {
+
     private static EntityManagerFactory emf;
     private static PoemDAO instance;
 
-    public PoemDAO(){}
+    // Constructor is now empty (used to set emf through the static method)
+    private PoemDAO()
+    {
+    }
 
+    // Static method to initialize the instance with emf
     public static PoemDAO getInstance(EntityManagerFactory _emf)
     {
         if (emf == null)
         {
-            emf = _emf;
+            emf = _emf; // Initialize emf if it's null
             instance = new PoemDAO();
         }
         return instance;
@@ -30,27 +35,22 @@ public class PoemDAO implements IDAO<Poem, Integer>
     {
         try (EntityManager em = emf.createEntityManager())
         {
-            try
+            em.getTransaction().begin();
+            Author author = poem.getAuthor();
+            Author existingAuthor = em.find(Author.class, author.getId());
+            if (existingAuthor == null)
             {
-                em.getTransaction().begin();
-                Author author = poem.getAuthor();
-
-                Author exsistingAuhtor = em.find(Author.class, author.getId());
-                if (exsistingAuhtor == null)
-                {
-                    em.persist(author);
-                } else {
-                    poem.setAuthor(exsistingAuhtor);
-                }
-
-                em.persist(poem);
-                em.getTransaction().commit();
-                return poem;
-            } catch (Exception e)
+                em.persist(author);
+            } else
             {
-                em.getTransaction().rollback();
-                throw new ApiException(401, "Error creating poem", e);
+                poem.setAuthor(existingAuthor);
             }
+            em.persist(poem);
+            em.getTransaction().commit();
+            return poem;
+        } catch (Exception e)
+        {
+            throw new ApiException(401, "Error creating poem", e);
         }
     }
 
@@ -71,9 +71,8 @@ public class PoemDAO implements IDAO<Poem, Integer>
             return em.createQuery("SELECT p FROM Poem p ORDER BY p.id", Poem.class).getResultList();
         } catch (Exception e)
         {
-            throw new ApiException(401, "Error finding list of poem", e);
+            throw new ApiException(401, "Error finding list of poems", e);
         }
-
     }
 
     @Override
@@ -96,21 +95,17 @@ public class PoemDAO implements IDAO<Poem, Integer>
     {
         try (EntityManager em = emf.createEntityManager())
         {
-            try
+            Poem poem = em.find(Poem.class, id);
+            if (poem == null)
             {
-                Poem poem = em.find(Poem.class, id);
-                if (poem == null)
-                {
-                    throw new NullPointerException();
-                }
-                em.getTransaction().begin();
-                em.remove(poem);
-                em.getTransaction().commit();
-            } catch (Exception e)
-            {
-                em.getTransaction().rollback();
-                throw new ApiException(401, "Error deleting Poem", e);
+                throw new NullPointerException("Poem not found");
             }
+            em.getTransaction().begin();
+            em.remove(poem);
+            em.getTransaction().commit();
+        } catch (Exception e)
+        {
+            throw new ApiException(401, "Error deleting Poem", e);
         }
     }
 }

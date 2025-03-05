@@ -61,6 +61,7 @@ public class PoemController
                 .age(authorDTO.getAge())
                 .build();
 
+        //TODO check om author findes i DB
         updatedAuthor = authorDAO.create(updatedAuthor);
 
         Poem updatedPoem = Poem.builder()

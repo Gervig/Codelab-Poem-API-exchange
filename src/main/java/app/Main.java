@@ -1,6 +1,7 @@
 package app;
 
 import app.config.HibernateConfig;
+import app.populators.PoemPopulator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -11,6 +12,8 @@ public class Main
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
+
+        PoemPopulator.populate(emf);
 
 
         // Close the database connection:

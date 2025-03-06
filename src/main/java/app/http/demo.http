@@ -1,0 +1,21 @@
+GET localhost:7070/api/poem
+
+###
+POST localhost:7070/api/poem
+Content-Type: "application/json"
+
+{
+    "poem": "There once was a coder named Ray,/nWho debugged through the night and the day./nWith coffee in hand,/nAnd code he had planned,/nHe shipped it with zero delay!",
+    "created": [2025, 6, 3],
+    "authorDTO": {
+      "name": "Casper",
+      "age": 33
+    }
+  },
+
+###
+PUT localhost:7070/api/poem/2
+Content-Type: "application/json"
+
+{
+}

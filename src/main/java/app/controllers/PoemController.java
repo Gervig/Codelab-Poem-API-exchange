@@ -62,7 +62,11 @@ public class PoemController
                 .build();
 
         //TODO check om author findes i DB
-        updatedAuthor = authorDAO.create(updatedAuthor);
+        Author author = poem.getAuthor();
+        if (author == null)
+        {
+            updatedAuthor = authorDAO.create(updatedAuthor);
+        }
 
         Poem updatedPoem = Poem.builder()
                 .poem(poemDTO.getPoem())

@@ -18,4 +18,5 @@ PUT localhost:7070/api/poem/2
 Content-Type: "application/json"
 
 {
+    "poem": "A poet who wrote with great flair,\nHad rhymes floating fresh in the air.\nBut one fateful night,\nHe ran out of might,\nAnd found his page utterly bare!"
 }

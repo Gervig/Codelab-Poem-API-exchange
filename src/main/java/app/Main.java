@@ -46,6 +46,8 @@ public class Main
             }));
         }).start(7070);
 
+        //TODO make routes for authors
+
 
         // Close the EntityManagerFactory when done
 //        emf.close();

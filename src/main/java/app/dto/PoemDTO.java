@@ -12,6 +12,7 @@ public class PoemDTO
 {
     private String poem;
     private LocalDate created;
+    //TODO rename json key from authorDTO to author
     private AuthorDTO authorDTO;
 
     public PoemDTO(Poem poem)

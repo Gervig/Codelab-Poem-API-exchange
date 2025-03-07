@@ -26,6 +26,7 @@ public class Main
         Javalin.create(config ->
         {
             config.router.contextPath = "/api";
+            //TODO refactor this to a route package and create getRoutes methods
             config.router.apiBuilder(() -> ApiBuilder.path("poem", () ->
             {
                 ApiBuilder.get("/", ctx -> ctx.json(poemController.getAll()));
